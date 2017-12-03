@@ -1,6 +1,7 @@
 
 import java.awt.BorderLayout;
-import java.awt.Container;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,8 +35,13 @@ public class CalculatorGUI implements ActionListener {
   private JFrame frame;
   private JTextArea serverResponse;
   
-  public String[] labels = {"operator", "operand", "space", "answer"};
-  public Map<String, JLabel> inputs = new HashMap<String, JLabel>();
+  // Display components
+  private String[] labels = {"operator", "operand", "space", "answer"};
+  private Map<String, JLabel> inputs = new HashMap<String, JLabel>();
+  
+  // Buttons
+  private String[] btns = {"/","7","8","9","*","4","5","6","-","1","2","3","+","0"};
+  
   
   private Boolean clearOnNextInput;
   
@@ -56,14 +62,14 @@ public class CalculatorGUI implements ActionListener {
     try {
       client = new CalculatorClient();
     } catch (MalformedURLException | RemoteException | NotBoundException e) {
-      serverResponse.append("Error contacting remote server");
+      serverResponse.append("Error contacting remote server\n");
     }
     
     // Get welcome message from server.
     try {
-      serverResponse.append(client.getMessage());
+      serverResponse.append(client.getMessage() + "\n");
     } catch (RemoteException e) {
-      serverResponse.append("Error contacting remote server. Server unavailable.");
+      serverResponse.append("Error contacting remote server. Server unavailable\n.");
     }
     inputs.get("operand").setText("");
     clearOnNextInput = false;
@@ -85,7 +91,7 @@ public class CalculatorGUI implements ActionListener {
     
     for(int i=0; i< labels.length; i++){
       JLabel lbl = new JLabel(" ");
-      lbl.setFont (lbl.getFont().deriveFont (32.0f));
+      lbl.setFont (lbl.getFont().deriveFont (16.0f));
       inputs.put(labels[i], lbl);
       inputPanel.add(lbl);
     }
@@ -103,43 +109,44 @@ public class CalculatorGUI implements ActionListener {
     frame.getContentPane().add(scroll, BorderLayout.CENTER);
 
     contentPane.add(serverResponse, BorderLayout.SOUTH);
-
+    
+    // Want button panel grid in 4 rows with 4 columns,
+    int r = 0;
+    int c = 0;
     
     // Button Panel
-    JPanel buttonPanel = new JPanel(new GridLayout(4, 4));
-    // Top Row
-    addButton(buttonPanel, "/");
-    addButton(buttonPanel, "7");
-    addButton(buttonPanel, "8");
-    addButton(buttonPanel, "9");
-    // New Row
-    addButton(buttonPanel, "*");
-    addButton(buttonPanel, "4");
-    addButton(buttonPanel, "5");
-    addButton(buttonPanel, "6");
-
-    // New Row
-    addButton(buttonPanel, "-");
-    addButton(buttonPanel, "1");
-    addButton(buttonPanel, "2");
-    addButton(buttonPanel, "3");
-
-    // New Row
-    addButton(buttonPanel, "+");
-    addButton(buttonPanel, "0");
-    addButton(buttonPanel, "Submit");
+    JPanel buttonPanel = new JPanel(new GridBagLayout());
+    // Add single cell buttons to the  button panel
+    for(int i=0; i< btns.length; i++){      
+      // Create button
+      JButton button = new JButton(btns[i]);
+      button.addActionListener(this);
+      // Create Grid bag contraints for button
+      GridBagConstraints gbc_btn = new GridBagConstraints();
+      gbc_btn.fill = GridBagConstraints.HORIZONTAL;
+      gbc_btn.gridx = r;
+      gbc_btn.gridy = c;
+      // Update grid cell,
+      r++;
+      if (r ==4) {
+        r = 0;
+        c ++;
+      }
+      // Add button
+      buttonPanel.add(button, gbc_btn); 
+    }    
+    // Now add the submit button to take 2 grid cells.
+    JButton submit = new JButton("Submit");
+    submit.addActionListener(this);
+    GridBagConstraints gbc_submit = new GridBagConstraints();
+    //gbc_submit.fill = GridBagConstraints.HORIZONTAL;
+    gbc_submit.gridwidth = 2;
+    gbc_submit.gridx = r;
+    gbc_submit.gridy = c;
+    buttonPanel.add(submit, gbc_submit);
+        
     contentPane.add(buttonPanel, BorderLayout.CENTER);
-
     frame.pack();
-  }
-
-  /**
-   * Add a button to the button panel.
-   */
-  private void addButton(Container panel, String buttonText) {
-    JButton button = new JButton(buttonText);
-    button.addActionListener(this);
-    panel.add(button);
   }
 
   /**
@@ -160,8 +167,10 @@ public class CalculatorGUI implements ActionListener {
       // Get the answer
       try {
         inputs.get("answer").setText(String.valueOf(client.submit()));
-      } catch (RemoteException e) {
-        serverResponse.append("Error contacting remote server");
+      } catch (RemoteException e1) {
+        serverResponse.append("Error contacting remote server\n");
+      } catch (IllegalArgumentException e2) {
+        serverResponse.append("Error: Division by Zero\n");
       }
       
     //  Operator Hit

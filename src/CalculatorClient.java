@@ -37,34 +37,6 @@ public class CalculatorClient extends Observable {
   public CalculatorClient(String test) {
     
   }
-  
-  //TODO delete test method
-  private void test() {
-    setOperand1(5);
-    setOperand2(2);
-    setOperator("+");
-    try {
-      System.out.println(submit());
-      setOperator("-");
-      System.out.println(submit());
-      setOperator("*");
-      System.out.println(submit());
-      setOperator("/");
-      System.out.println(submit());
-      
-    } catch (RemoteException e) {
-      System.out.println("What happened?");
-    }
-  }
-  
-  
-  // TODO Delete this when GUI is implemented
-  public static void main(String[] args) throws MalformedURLException, RemoteException, NotBoundException {
-      CalculatorClient calculator = new CalculatorClient();
-      System.out.println(calculator.remoteServer.getMessage());
-      calculator.test();
-      calculator.test();
-  }
 
   /**
    * Getter for first operand.
@@ -142,7 +114,7 @@ public class CalculatorClient extends Observable {
    * Get the answer from the server
    * @throws RemoteException 
    */
-  public int submit() throws RemoteException {
+  public int submit() throws RemoteException, IllegalArgumentException {
     
     if (operator.equals("+")) {
       int answer = remoteServer.sum(operand1, operand2);

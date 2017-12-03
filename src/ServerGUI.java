@@ -1,10 +1,9 @@
 import java.awt.BorderLayout;
-import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.text.DefaultCaret;
 
 
 @SuppressWarnings("serial")
@@ -32,6 +31,9 @@ public class ServerGUI extends JFrame {
     
     log = new JTextArea();
     log.setEditable(false);
+    // Always scroll log to bottom as new text appears.
+    DefaultCaret caret = (DefaultCaret)log.getCaret();
+    caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
     frame.getContentPane().add(new JScrollPane(log), BorderLayout.CENTER);
 
     frame.setTitle("Server");
