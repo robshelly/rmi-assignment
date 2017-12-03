@@ -6,12 +6,12 @@ import org.junit.jupiter.api.Test;
 
 class TestServerProduct {
   
-  private ServerModel calculator;
+  private ServerProgram calculator;
   
   @Test
   void testMultiplcationByZero() throws RemoteException {
     
-    calculator = new ServerModel();
+    calculator = new ServerProgram(new ServerGUI());
     
     try {
       assertEquals(calculator.product(0,0), 0);
@@ -25,7 +25,7 @@ class TestServerProduct {
   @Test
   void testMultiplicativeIdentity() throws RemoteException {
     
-    calculator = new ServerModel();
+    calculator = new ServerProgram(new ServerGUI());
     
     try {
       assertEquals(calculator.product(1,0), 0);
@@ -39,7 +39,7 @@ class TestServerProduct {
   @Test
   void testProducts() throws RemoteException {
     
-    calculator = new ServerModel();
+    calculator = new ServerProgram(new ServerGUI());
     
     try {
       assertEquals(calculator.product(2,0), 0);

@@ -8,7 +8,7 @@ import javax.swing.JTextArea;
 
 
 @SuppressWarnings("serial")
-public class ServerView extends JFrame {
+public class ServerGUI extends JFrame {
   
   private JFrame frame; 
   private JTextArea log ;
@@ -18,7 +18,7 @@ public class ServerView extends JFrame {
    * 
    * @param engine
    */
-  public ServerView() {
+  public ServerGUI() {
     initialize();
     
   }
@@ -31,6 +31,7 @@ public class ServerView extends JFrame {
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     
     log = new JTextArea();
+    log.setEditable(false);
     frame.getContentPane().add(new JScrollPane(log), BorderLayout.CENTER);
 
     frame.setTitle("Server");

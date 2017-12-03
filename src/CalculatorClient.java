@@ -59,15 +59,11 @@ public class CalculatorClient extends Observable {
   
   
   // TODO Delete this when GUI is implemented
-  public static void main(String[] args) {
-    try {
+  public static void main(String[] args) throws MalformedURLException, RemoteException, NotBoundException {
       CalculatorClient calculator = new CalculatorClient();
       System.out.println(calculator.remoteServer.getMessage());
       calculator.test();
       calculator.test();
-    } catch (MalformedURLException | RemoteException | NotBoundException e) {
-      System.out.println("Error contacting remote server!");
-    }
   }
 
   /**
@@ -149,7 +145,10 @@ public class CalculatorClient extends Observable {
   public int submit() throws RemoteException {
     
     if (operator.equals("+")) {
-      return remoteServer.sum(operand1, operand2);
+      int answer = remoteServer.sum(operand1, operand2);
+      setChanged();
+      notifyObservers(answer);
+      return answer;
       
     } else if (operator.equals("-")) {
       return remoteServer.difference(operand1, operand2);

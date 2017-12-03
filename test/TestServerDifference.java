@@ -6,12 +6,12 @@ import org.junit.jupiter.api.Test;
 
 class TestServerDifference {
   
-  private ServerModel calculator;
+  private ServerProgram calculator;
   
   @Test
   void testDifference() throws RemoteException {
     
-    calculator = new ServerModel();
+    calculator = new ServerProgram(new ServerGUI());
     
     try {
       assertEquals(calculator.difference(0,0), 0);

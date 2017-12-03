@@ -6,12 +6,12 @@ import org.junit.jupiter.api.Test;
 
 class TestServerSum {
   
-  private ServerModel calculator;
+  private ServerProgram calculator;
   
   @Test
   void testSum() throws RemoteException {
     
-    calculator = new ServerModel();
+    calculator = new ServerProgram(new ServerGUI());
     
     try {
       assertEquals(calculator.sum(0,0), 0);

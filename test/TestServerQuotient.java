@@ -6,12 +6,12 @@ import org.junit.jupiter.api.Test;
 
 class TestServerQuotient {
   
-  private ServerModel calculator;
+  private ServerProgram calculator;
 
   @Test
   void testDivisonByzero() throws RemoteException {
     
-    calculator = new ServerModel();
+    calculator = new ServerProgram(new ServerGUI());
 
     
     try {
@@ -28,7 +28,7 @@ class TestServerQuotient {
   //@Test
   void testDivion() throws RemoteException {
     
-    calculator = new ServerModel();
+    calculator = new ServerProgram(new ServerGUI());
     
     try {
       assertEquals(calculator.quotient(0, 1), 0);
